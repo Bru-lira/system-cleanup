@@ -1,0 +1,46 @@
+# ============================================
+# Sistema Operacional
+# ============================================
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# ============================================
+# Editores / IDEs
+# ============================================
+.vscode/
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ============================================
+# PowerShell
+# ============================================
+*.ps1.bak
+*.log
+Microsoft.PowerShell_profile.ps1
+
+# ============================================
+# Arquivos temporários / testes locais
+# ============================================
+*.tmp
+*.temp
+/temp/
+/output/
+/test/
+*.zip
+
+# ============================================
+# Segredos e configs locais (por precaução)
+# ============================================
+*.env
+*.secrets
+config.local.*
