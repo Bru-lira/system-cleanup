@@ -1,7 +1,7 @@
 Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 
 # ============================================
-# FUNCOES DE LIMPEZA
+# CLEANUP FUNCTIONS
 # ============================================
 
 function Clear-RecycleBin-Safe {
@@ -39,11 +39,11 @@ function Get-ChromeProfiles {
     if (Test-Path $statePath) {
         $cache = (Get-Content -Raw $statePath | ConvertFrom-Json).profile.info_cache
         foreach ($p in $cache.PSObject.Properties) {
-            # user_name = e-mail da conta Google logada no perfil (quando existe)
+            # user_name = email of the Google account signed in to the profile (if any)
             $email = $p.Value.user_name
             if ([string]::IsNullOrWhiteSpace($email)) {
-                $nomeLocal = if ($p.Value.name) { $p.Value.name } else { $p.Name }
-                $display = "$nomeLocal (sem conta vinculada)"
+                $localName = if ($p.Value.name) { $p.Value.name } else { $p.Name }
+                $display = "$localName (no linked account)"
             } else {
                 $display = $email
             }
@@ -59,14 +59,14 @@ function Get-ChromeProfiles {
     if ($profiles.Count -eq 0) {
         $def = Join-Path $udPath "Default"
         if (Test-Path $def) {
-            $profiles += [PSCustomObject]@{ Display = "Default (sem conta vinculada)"; Path = $def; Folder = "Default" }
+            $profiles += [PSCustomObject]@{ Display = "Default (no linked account)"; Path = $def; Folder = "Default" }
         }
     }
     return $profiles
 }
 
 # ============================================
-# HELPERS DE UI
+# UI HELPERS
 # ============================================
 
 $fontBold9  = New-Object System.Drawing.Font("Segoe UI", 9,  [System.Drawing.FontStyle]::Bold)
@@ -91,60 +91,60 @@ function New-GroupBox($text, $x, $y, $w, $h) {
 }
 
 # ============================================
-# FORMULARIO PRINCIPAL
+# MAIN FORM
 # ============================================
 
 $form = New-Object System.Windows.Forms.Form
-$form.Text = "Limpeza do Sistema"
+$form.Text = "System Cleanup"
 $form.Size = [System.Drawing.Size]::new(500, 560)
 $form.StartPosition = "CenterScreen"; $form.FormBorderStyle = "FixedDialog"
 $form.MaximizeBox = $false; $form.BackColor = [System.Drawing.Color]::FromArgb(240,240,240)
 
-# ---- SECAO SISTEMA ----
-$grpSys = New-GroupBox "Sistema" 15 15 460 150
+# ---- SYSTEM SECTION ----
+$grpSys = New-GroupBox "System" 15 15 460 150
 
-$chkRecycleBin  = New-Ctrl System.Windows.Forms.CheckBox $grpSys @{Text="Esvaziar lixeira"; Location=[System.Drawing.Point]::new(15,35); Size=[System.Drawing.Size]::new(200,25); Font=$fontNorm9}
-$chkTempFiles   = New-Ctrl System.Windows.Forms.CheckBox $grpSys @{Text="Limpar arquivos temporarios"; Location=[System.Drawing.Point]::new(15,65); Size=[System.Drawing.Size]::new(200,25); Font=$fontNorm9}
+$chkRecycleBin  = New-Ctrl System.Windows.Forms.CheckBox $grpSys @{Text="Empty Recycle Bin"; Location=[System.Drawing.Point]::new(15,35); Size=[System.Drawing.Size]::new(200,25); Font=$fontNorm9}
+$chkTempFiles   = New-Ctrl System.Windows.Forms.CheckBox $grpSys @{Text="Clear temporary files"; Location=[System.Drawing.Point]::new(15,65); Size=[System.Drawing.Size]::new(200,25); Font=$fontNorm9}
 $lblSystemStatus= New-Ctrl System.Windows.Forms.Label   $grpSys @{Location=[System.Drawing.Point]::new(230,35); Size=[System.Drawing.Size]::new(210,55); Font=$fontNorm8; ForeColor=[System.Drawing.Color]::Gray}
-$btnSystem      = New-Ctrl System.Windows.Forms.Button  $grpSys @{Text="Executar Sistema"; Location=[System.Drawing.Point]::new(15,105); Size=[System.Drawing.Size]::new(425,30); BackColor=$colorBlue; ForeColor=[System.Drawing.Color]::White; FlatStyle="Flat"; Font=$fontBold9}
+$btnSystem      = New-Ctrl System.Windows.Forms.Button  $grpSys @{Text="Run System Cleanup"; Location=[System.Drawing.Point]::new(15,105); Size=[System.Drawing.Size]::new(425,30); BackColor=$colorBlue; ForeColor=[System.Drawing.Color]::White; FlatStyle="Flat"; Font=$fontBold9}
 
-# ---- SECAO NAVEGADOR ----
-$grpBrowser = New-GroupBox "Navegador" 15 180 460 220
+# ---- BROWSER SECTION ----
+$grpBrowser = New-GroupBox "Browser" 15 180 460 220
 
 New-Ctrl System.Windows.Forms.Label $grpBrowser @{Text="Chrome"; Location=[System.Drawing.Point]::new(15,30); Size=[System.Drawing.Size]::new(100,25); Font=$fontBold10} | Out-Null
 $cmbProfiles    = New-Ctrl System.Windows.Forms.ComboBox $grpBrowser @{Location=[System.Drawing.Point]::new(15,58);  Size=[System.Drawing.Size]::new(300,25); DropDownStyle="DropDownList"; Font=$fontNorm9}
 $lblProfileInfo = New-Ctrl System.Windows.Forms.Label   $grpBrowser @{Location=[System.Drawing.Point]::new(15,88);  Size=[System.Drawing.Size]::new(300,20); Font=$fontNorm8; ForeColor=[System.Drawing.Color]::DarkGray}
-$chkCache       = New-Ctrl System.Windows.Forms.CheckBox $grpBrowser @{Text="Limpar cache do navegador"; Location=[System.Drawing.Point]::new(15,115); Size=[System.Drawing.Size]::new(200,25); Font=$fontNorm9}
+$chkCache       = New-Ctrl System.Windows.Forms.CheckBox $grpBrowser @{Text="Clear browser cache"; Location=[System.Drawing.Point]::new(15,115); Size=[System.Drawing.Size]::new(200,25); Font=$fontNorm9}
 $lblCacheStatus = New-Ctrl System.Windows.Forms.Label   $grpBrowser @{Location=[System.Drawing.Point]::new(230,115); Size=[System.Drawing.Size]::new(210,25); Font=$fontNorm8; ForeColor=[System.Drawing.Color]::Gray}
-$btnBrowser     = New-Ctrl System.Windows.Forms.Button  $grpBrowser @{Text="Executar Navegador"; Location=[System.Drawing.Point]::new(15,160); Size=[System.Drawing.Size]::new(425,30); BackColor=$colorBlue; ForeColor=[System.Drawing.Color]::White; FlatStyle="Flat"; Font=$fontBold9}
+$btnBrowser     = New-Ctrl System.Windows.Forms.Button  $grpBrowser @{Text="Run Browser Cleanup"; Location=[System.Drawing.Point]::new(15,160); Size=[System.Drawing.Size]::new(425,30); BackColor=$colorBlue; ForeColor=[System.Drawing.Color]::White; FlatStyle="Flat"; Font=$fontBold9}
 
-# ---- BOTAO FECHAR ----
-$btnClose = New-Ctrl System.Windows.Forms.Button $form @{Text="Fechar"; Location=[System.Drawing.Point]::new(395,415); Size=[System.Drawing.Size]::new(80,30); BackColor=[System.Drawing.Color]::LightGray; FlatStyle="Flat"}
+# ---- CLOSE BUTTON ----
+$btnClose = New-Ctrl System.Windows.Forms.Button $form @{Text="Close"; Location=[System.Drawing.Point]::new(395,415); Size=[System.Drawing.Size]::new(80,30); BackColor=[System.Drawing.Color]::LightGray; FlatStyle="Flat"}
 
-# ---- POPULAR PERFIS ----
+# ---- POPULATE PROFILES ----
 $profilesList = Get-ChromeProfiles
 $profilesList | ForEach-Object { $cmbProfiles.Items.Add($_.Display) | Out-Null }
 if ($cmbProfiles.Items.Count -gt 0) {
     $cmbProfiles.SelectedIndex = 0
-    $lblProfileInfo.Text = "Conta: $($profilesList[0].Display)"
+    $lblProfileInfo.Text = "Account: $($profilesList[0].Display)"
 }
 $cmbProfiles.Add_SelectedIndexChanged({
     if ($cmbProfiles.SelectedIndex -ge 0) {
-        $lblProfileInfo.Text = "Conta: $($profilesList[$cmbProfiles.SelectedIndex].Display)"
+        $lblProfileInfo.Text = "Account: $($profilesList[$cmbProfiles.SelectedIndex].Display)"
     }
 })
 
 # ============================================
-# EVENTOS
+# EVENTS
 # ============================================
 
 $btnSystem.Add_Click({
     $tasks = @(
-        @{ Chk=$chkRecycleBin.Checked; Status="Esvaziando lixeira...";           Fn={ Clear-RecycleBin-Safe }; OkMsg="Lixeira esvaziada com sucesso";        ErrMsg="Falha ao esvaziar a lixeira";          Label="Lixeira"     },
-        @{ Chk=$chkTempFiles.Checked;  Status="Limpando arquivos temporarios..."; Fn={ Clear-TempFiles };       OkMsg="Arquivos temporarios removidos";       ErrMsg="Falha ao limpar arquivos temporarios"; Label="Temporarios" }
+        @{ Chk=$chkRecycleBin.Checked; Status="Emptying Recycle Bin...";        Fn={ Clear-RecycleBin-Safe }; OkMsg="Recycle Bin emptied successfully";     ErrMsg="Failed to empty the Recycle Bin";      Label="Recycle Bin"  },
+        @{ Chk=$chkTempFiles.Checked;  Status="Clearing temporary files...";    Fn={ Clear-TempFiles };       OkMsg="Temporary files removed";              ErrMsg="Failed to clear temporary files";      Label="Temp Files"   }
     )
 
-    $linhas = @(); $concluido = @()
+    $lines = @(); $completed = @()
 
     foreach ($t in $tasks) {
         if (-not $t.Chk) { continue }
@@ -153,40 +153,40 @@ $btnSystem.Add_Click({
         $form.Refresh()
 
         if (& $t.Fn) {
-            $linhas += "[OK] $($t.OkMsg)"
-            $concluido += $t.Label
+            $lines += "[OK] $($t.OkMsg)"
+            $completed += $t.Label
         } else {
-            $linhas += "[ERRO] $($t.ErrMsg)"
+            $lines += "[ERROR] $($t.ErrMsg)"
         }
     }
 
-    if ($linhas.Count -eq 0) {
-        $lblSystemStatus.Text = "Nenhuma tarefa selecionada"; $lblSystemStatus.ForeColor = [System.Drawing.Color]::Gray
-        [System.Windows.Forms.MessageBox]::Show("Selecione pelo menos uma tarefa!", "Aviso")
+    if ($lines.Count -eq 0) {
+        $lblSystemStatus.Text = "No task selected"; $lblSystemStatus.ForeColor = [System.Drawing.Color]::Gray
+        [System.Windows.Forms.MessageBox]::Show("Select at least one task!", "Warning")
     } else {
-        $lblSystemStatus.Text      = if ($concluido.Count -gt 0) { "Concluido: $($concluido -join ', ')" } else { "Falha na execucao" }
+        $lblSystemStatus.Text      = if ($completed.Count -gt 0) { "Completed: $($completed -join ', ')" } else { "Execution failed" }
         $lblSystemStatus.ForeColor = [System.Drawing.Color]::Green
 
-        $resultMsg = "Resultado da limpeza:`n`n" + ($linhas -join "`n")
-        [System.Windows.Forms.MessageBox]::Show($resultMsg, "Limpeza do Sistema")
+        $resultMsg = "Cleanup result:`n`n" + ($lines -join "`n")
+        [System.Windows.Forms.MessageBox]::Show($resultMsg, "System Cleanup")
     }
 })
 
 $btnBrowser.Add_Click({
-    if (-not $chkCache.Checked) { [System.Windows.Forms.MessageBox]::Show("Nenhuma tarefa selecionada para o navegador!", "Aviso"); return }
-    if ($cmbProfiles.SelectedIndex -lt 0) { [System.Windows.Forms.MessageBox]::Show("Nenhum perfil encontrado ou selecionado!", "Erro"); return }
+    if (-not $chkCache.Checked) { [System.Windows.Forms.MessageBox]::Show("No task selected for the browser!", "Warning"); return }
+    if ($cmbProfiles.SelectedIndex -lt 0) { [System.Windows.Forms.MessageBox]::Show("No profile found or selected!", "Error"); return }
 
     $sel = $profilesList[$cmbProfiles.SelectedIndex]
-    $lblCacheStatus.Text = "Limpando cache..."; $lblCacheStatus.ForeColor = [System.Drawing.Color]::Orange
+    $lblCacheStatus.Text = "Clearing cache..."; $lblCacheStatus.ForeColor = [System.Drawing.Color]::Orange
     $form.Refresh()
 
     if (Clear-ChromeCache -ProfilePath $sel.Path) {
-        $lblCacheStatus.Text = "[OK] Cache limpo"; $lblCacheStatus.ForeColor = [System.Drawing.Color]::Green
-        $msg = "[OK] Cache do perfil limpo com sucesso`n`n$($sel.Display)`n`nHistorico e senhas foram preservados."
-        [System.Windows.Forms.MessageBox]::Show($msg, "Concluido")
+        $lblCacheStatus.Text = "[OK] Cache cleared"; $lblCacheStatus.ForeColor = [System.Drawing.Color]::Green
+        $msg = "[OK] Profile cache cleared successfully`n`n$($sel.Display)`n`nHistory and passwords were preserved."
+        [System.Windows.Forms.MessageBox]::Show($msg, "Completed")
     } else {
-        $lblCacheStatus.Text = "[ERRO] Falha ao limpar cache"; $lblCacheStatus.ForeColor = [System.Drawing.Color]::Red
-        [System.Windows.Forms.MessageBox]::Show("[ERRO] Falha ao limpar o cache do perfil selecionado.", "Erro")
+        $lblCacheStatus.Text = "[ERROR] Failed to clear cache"; $lblCacheStatus.ForeColor = [System.Drawing.Color]::Red
+        [System.Windows.Forms.MessageBox]::Show("[ERROR] Failed to clear the selected profile's cache.", "Error")
     }
 })
 
