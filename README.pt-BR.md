@@ -38,7 +38,7 @@ Manter um Windows limpo geralmente significa repetir manualmente as mesmas açõ
 
 ## 🚀 Como usar
 
-1. Baixe o arquivo `limpeza-sistema.ps1` deste repositório.
+1. Baixe o arquivo `system-cleanup.ps1` deste repositório.
 2. Clique com o botão direito no arquivo e selecione **"Executar com PowerShell"**.
    - Caso a execução de scripts esteja bloqueada no seu sistema, abra o PowerShell como administrador e rode:
      ```powershell
