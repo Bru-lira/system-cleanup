@@ -31,7 +31,7 @@ Keeping Windows clean usually means manually repeating the same actions: emptyin
 ## 🖥️ Screenshots
 
 | Main window | Task result |
-|:---:|:---:|:---:|
+|:---:|:---:|
 | ![Main window](screenshots/screenshot-main.png) | ![Cleanup result](screenshots/screenshot-result.png) |
 
 ## ⚙️ Requirements
