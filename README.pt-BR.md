@@ -26,8 +26,10 @@ Manter um Windows limpo geralmente significa repetir manualmente as mesmas açõ
 - Feedback de status em tempo real para cada operação
 - Tratamento de erros isolado por tarefa (uma falha não interrompe as demais)
 
-## 🖥️ Capturas de tela
+## 🖥️ Screenshots
 
+| Main window | Task result |
+|:---:|:---:|
 | ![Main window](screenshots/screenshot-main.png) | ![Cleanup result](screenshots/screenshot-result.png) |
 
 ## ⚙️ Requisitos
