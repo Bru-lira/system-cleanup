@@ -32,10 +32,7 @@ Keeping Windows clean usually means manually repeating the same actions: emptyin
 
 | Main window | Task result | Dark mode |
 |:---:|:---:|:---:|
-| ![Main window](screenshots/screenshot-main.png) | ![Cleanup result](screenshots/screenshot-result.png) | ![Dark mode](screenshots/screenshot-dark.png) |
-
-
-> _Add screenshots of the running interface here (`System` and `Browser` sections)._
+| ![Main window](screenshots/screenshot-main.png) | ![Cleanup result](screenshots/screenshot-result.png) |
 
 ## ⚙️ Requirements
 
