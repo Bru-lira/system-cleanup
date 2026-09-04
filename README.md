@@ -62,7 +62,8 @@ Keeping Windows clean usually means manually repeating the same actions: emptyin
 ## 🗂️ Project structure
 
 ```
-├── limpeza-sistema.ps1   # Main script
+├── system-cleanup.ps1     # Main script
+├── system-cleanupBR.ps1   # Main script
 ├── LICENSE
 ├── .gitignore
 ├── README.md             # This file (English)
