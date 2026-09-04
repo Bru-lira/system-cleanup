@@ -60,11 +60,12 @@ Manter um Windows limpo geralmente significa repetir manualmente as mesmas açõ
 ## 🗂️ Estrutura do projeto
 
 ```
-├── limpeza-sistema.ps1   # Script principal
+├── system-cleanup.ps1     # Main script
+├── system-cleanupBR.ps1   # Main script
 ├── LICENSE
 ├── .gitignore
-├── README.md             # Versão em inglês
-└── README.pt-BR.md       # Este arquivo (Português)
+├── README.md             # This file (English)
+└── README.pt-BR.md       # Portuguese version
 ```
 
 ## 🛠️ Tecnologias
