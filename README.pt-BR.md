@@ -28,7 +28,7 @@ Manter um Windows limpo geralmente significa repetir manualmente as mesmas açõ
 
 ## 🖥️ Capturas de tela
 
-> _Adicione aqui os prints da interface rodando (`Sistema` e `Navegador`)._
+| ![Main window](screenshots/screenshot-main.png) | ![Cleanup result](screenshots/screenshot-result.png) |
 
 ## ⚙️ Requisitos
 
